@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Faceify -- Who Do ~*~*~YOU~*~*~ Look Like?</title>
+
+    <!-- Bootstrap, but get these specific ones loaded locally -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/styles.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+<body data-spy="scroll" data-offset="0" data-target="#navigation">
+    <!-- Fixed navbar -->
+    <div id="navigation" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><b>Faceify</b></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#home" class="smothscroll">Home</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <section id="home" name="home"></section>
+    <div id="headerwrap">
+        <div class="container">
+            <div class="row centered">
+                <div class="col-lg-12">
+                    <h1><b>Faceify</b> -- Who Do You Look Like?</h1>
+                </div>
+            </div>
+            <div id="explainer" class="row">
+                <div class="col-lg-12">
+                <h3>Welcome to Faceify.Years of collaboration between data scientists and biological anthropologists at Cambridge's School of Technology have resulted in algorithms that can scan any photo to see which famous celebrity you most look like.</h3>
+                <h3>Brad Pitt? Susan Sarandon? Forest Whitaker? Just upload a photo below and the answer will soon be yours!</h3>
+                </div>
+            </div>
+            <div id="home-container" class="row centered"></div>
+            <div id="upload-container" class="row centered"></div>
+            <div id="match-container" class="row centered"></div>
+        </div> <!--/ .container -->
+    </div><!--/ #headerwrap -->
+    <!-- Footer -->
+    <div id="c">
+        <div class="container">
+            <p>This is an <a href="http://www.twitter.com/andymboyle">Andy Boyle</a> project.</p>
+        </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script src="js/faceify.js"></script>
+
+<script type="text/template" id="home-template">
+<div class="col-lg-4">
+    <div id="choose-image">
+      <span class="btn btn-default btn-file">Choose Image <input type="file"></span>
+    </div>
+    <div>
+      <button type="submit" id="uploader" class="btn btn-lg">Submit To Faceify</button>
+    </div>
+</div>
+<div class="col-lg-8">
+    <img src="img/clooney.png">
+</div>
+</script>
+
+<script type="text/template" id="upload-template">
+<h2>LOADING</h2>
+</script>
+
+<script type="text/template" id="match-template">
+<div class="col-lg-6">
+    <img src="img/howard-1.jpg">
+</div>
+<div class="col-lg-6">
+    <h3>Your Match: <strong>Howard The Duck!</strong></h3>
+    <p class="strong">You have a 94.7 percent match with Hollywood's Howard The Duck! Congratulations. Or, should we say, conquackulations?</p>
+</div>
+</script>
+
+<script>
+(function($){
+    HomeView = Backbone.View.extend({
+        initialize: function(){
+            this.render();
+        },
+        render: function(){
+            // Compile the template using underscore
+            var template = _.template( $("#home-template").html(), {} );
+            // Load the compiled HTML into the Backbone "el"
+            this.$el.html( template );
+        },
+        events: {
+            // Listen for someone clicking the upload button
+            "click #uploader": "doUpload"
+        },
+
+        doUpload: function(){
+            var upload_view = new UploadView({ el: $("#upload-container") });
+        }
+    });
+
+    UploadView = Backbone.View.extend({
+        initialize: function(){
+            $('#home-container').hide();
+            this.render();
+        },
+        render: function(){
+            // Compile the template using underscore
+            var template = _.template( $("#upload-template").html(), {} );
+            // Load the compiled HTML into the Backbone "el"
+            this.$el.html( template );
+            _.throttle(this.doMatch(), 4000);
+        },
+
+        doMatch: function(){
+            var match_view = new MatchView({ el: $("#match-view") });
+        }
+    });
+
+    MatchView = Backbone.View.extend({
+        initialize: function(){
+            $("#upload-container").hide();
+            this.render();
+        },
+
+        render: function(){
+            alert('hi andy');
+        }
+    });
+
+    var home_view = new HomeView({ el: $("#home-container") });
+})(jQuery);
+
+</script>
+
+</body>
+</html>
