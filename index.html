@@ -14,6 +14,7 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -57,16 +58,18 @@
             </div>
             <div id="home-container" class="row centered"></div>
             <div id="upload-container" class="row centered"></div>
+            <div id="progressbar2"></div>
             <div id="match-container" class="row centered"></div>
         </div> <!--/ .container -->
     </div><!--/ #headerwrap -->
     <!-- Footer -->
     <div id="c">
         <div class="container">
-            <p>This is an <a href="http://www.twitter.com/andymboyle">Andy Boyle</a> project.</p>
+            <p>This is an <a href="http://www.twitter.com/andymboyle">Andy Boyle</a> project. <a href="http://www.andyboyle.com">Learn more about him.</a></p>
         </div>
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js""></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
@@ -88,7 +91,8 @@
 </script>
 
 <script type="text/template" id="upload-template">
-<h2>LOADING</h2>
+<h3>CALCULATING...</h3>
+<div id="progressbar"></div>
 </script>
 
 <script type="text/template" id="match-template">
@@ -97,7 +101,9 @@
 </div>
 <div class="col-lg-6">
     <h3>Your Match: <strong>Howard The Duck!</strong></h3>
-    <p class="strong">You have a 94.7 percent match with Hollywood's Howard The Duck! Congratulations. Or, should we say, conquackulations?</p>
+    <p class="strong">According to our algorithm, you have a 94.7 percent match with Hollywood's <strong>Howard The Duck!</strong> Congratulations. Or, should we say, conquackulations?</p>
+    <div><button type="submit" id="refresh" class="btn btn-lg">Try again?</button></div>
+    <div><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://andyboyle.com/faceify/" data-text="I just found my celebrity match with Faceify. Now it's your turn!" data-size="large">Tweet</a></div>
 </div>
 </script>
 
@@ -133,11 +139,13 @@
             var template = _.template( $("#upload-template").html(), {} );
             // Load the compiled HTML into the Backbone "el"
             this.$el.html( template );
-            _.throttle(this.doMatch(), 4000);
-        },
-
-        doMatch: function(){
-            var match_view = new MatchView({ el: $("#match-view") });
+            $("#progressbar").progressbar({
+              value: false
+            });
+            setTimeout(function(){
+              // load the Match view
+              var match_view = new MatchView({ el: $("#match-container") });
+            }, 3000);
         }
     });
 
@@ -148,7 +156,11 @@
         },
 
         render: function(){
-            alert('hi andy');
+            // Compile the template using underscore
+            var template = _.template( $("#match-template").html(), {} );
+            // Load the compiled HTML into the Backbone "el"
+            this.$el.html( template );
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
         }
     });
 
