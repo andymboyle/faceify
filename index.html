@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property='og:image' content='http://andyboyle.com/faceify/img/clooney.png'/>
+    <meta property='og:description' content="Scan any photo to see which among thousands of famous celebrities you most look like." />
     <title>Faceify -- Who Do ~*~*~YOU~*~*~ Look Like?</title>
 
     <!-- Bootstrap, but get these specific ones loaded locally -->
@@ -52,7 +54,7 @@
             </div>
             <div id="explainer" class="row">
                 <div class="col-lg-12">
-                <h3>Welcome to Faceify.Years of collaboration between data scientists and biological anthropologists at Cambridge's School of Technology have resulted in algorithms that can scan any photo to see which among thousands of famous celebrities you most look like.</h3>
+                <h3>Welcome to Faceify. Years of collaboration between data scientists and biological anthropologists at Cambridge's School of Technology have resulted in algorithms that can scan any photo to see which among thousands of famous celebrities you most look like.</h3>
                 <h3>Brad Pitt? Susan Sarandon? Forest Whitaker? Just upload a photo below and the answer will soon be yours!</h3>
                 </div>
             </div>
@@ -86,7 +88,7 @@
     </div>
 </div>
 <div class="col-lg-8">
-    <img src="img/clooney.png">
+    <img src="img/clooney.png" class="img-responsive">
 </div>
 </script>
 
@@ -97,7 +99,7 @@
 
 <script type="text/template" id="match-template">
 <div class="col-lg-6">
-    <img src="img/howard-1.jpg">
+    <img src="img/howard-1.jpg" class="img-responsive">
 </div>
 <div class="col-lg-6">
     <h3>Your Match: <strong>Howard The Duck!</strong></h3>
@@ -161,6 +163,15 @@
             // Load the compiled HTML into the Backbone "el"
             this.$el.html( template );
             !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+        },
+
+        events: {
+            // Listen for someone clicking the refresh button
+            "click #refresh": "doRefresh"
+        },
+
+        doRefresh: function(){
+            location.reload();
         }
     });
 
